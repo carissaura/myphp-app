@@ -1,0 +1,31 @@
+name: CI/CD Pipeline PHP App by Carissa Aura Bethari
+on:
+  push:
+    branches: ["main"]
+permissions:
+  contents: read 
+  packages: write
+
+jobs: 
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      #1. Checkout kode
+      - name: Checkout Repository by Aura
+        uses: actions/checkout@v3
+
+      #2. Build Docker image
+      - name: Build Docker Image by Aura
+        run: docker build -t ghcr.io/${{ github.repository }}/myphp-app:latest . 
+
+      #3. Login ke GitHub Container Registry
+      - name: Login to GHCR by Aura
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      #4. Push image ke GHCR
+      - name: Push Docker Image by Aura
+        run: docker push ghcr.io/${{ github.repository }}/myphp-app:latest
